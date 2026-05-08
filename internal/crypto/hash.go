@@ -6,8 +6,11 @@ import (
 	"crypto/sha256"
 	"crypto/sha3"
 	"crypto/sha512"
+	"encoding/hex"
 	"fmt"
 	"hash"
+	"io"
+	"os"
 )
 
 type HashAlgorithm string
@@ -21,28 +24,46 @@ const (
 	HashSHA512 		HashAlgorithm = "sha512"
 )
 
-func Hash(input string, algorithm HashAlgorithm) (string, error) {
-	var h hash.Hash
+func getHashInst(algorithm HashAlgorithm) (hash.Hash, error) {
 	switch algorithm {
 	case HashSHA1:
-		h = sha1.New()
+		return sha1.New(), nil
 	case HashMD5:
-		h = md5.New()
+		return md5.New(), nil
 	case HashSHA3_256:
-		h = sha3.New256()
+		return sha3.New256(), nil
 	case HashSHA3_512:
-		h = sha3.New512()
+		return sha3.New512(), nil
 	case HashSHA256:
-		h = sha256.New()
+		return sha256.New(), nil
 	case HashSHA512:
-		h = sha512.New()
+		return sha512.New(), nil
 	default:
-		return "", fmt.Errorf("unsupported hash algorithm: %s", algorithm)
+		return nil, fmt.Errorf("unsupported hash algorithm: %s", algorithm)
 	}
-	if h == nil {
-		return "", fmt.Errorf("failed to create hash for algorithm: %s", algorithm)
-	}
+}
 
+func Hash(input string, algorithm HashAlgorithm) (string, error) {
+	h, err := getHashInst(algorithm)
+	if err != nil {
+		return "", err
+	}
 	h.Write([]byte(input))
-	return fmt.Sprintf("%x\n", h.Sum(nil)), nil 
+	return hex.EncodeToString(h.Sum(nil)), nil 
+}
+
+func HashFile(inputPath string, algorithm HashAlgorithm) (string, error) {
+	h, err := getHashInst(algorithm)
+	if err != nil {
+		return "", err
+	}
+	f, err := os.Open(inputPath)
+	if err != nil {
+		return "", fmt.Errorf("could not open file %q: %v", inputPath, err)
+	}
+	defer f.Close()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
