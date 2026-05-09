@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"aether/cmd/crypto"
 	"fmt"
 	"os"
 
@@ -47,7 +48,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.aether.yaml)")
+	// ====================== GLOBAL FLAGS ======================
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "table", "Output format (table, json, html)")
 	rootCmd.PersistentFlags().BoolVar(&saveToDB, "save", false, "Save scan results to database")
 	rootCmd.PersistentFlags().IntVar(&threads, "threads", 50, "Number of concurrent threads to use")
@@ -56,7 +57,12 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Verbose mode - show detailed output")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
+	// ====================== LOCAL FLAGS ======================
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	// ====================== REGISTER COMMANDS ======================
+
+	rootCmd.AddCommand(crypto.GetCryptoCmd())
 }
 
 
