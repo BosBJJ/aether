@@ -61,7 +61,7 @@ func GrabBanner(host string, port int, timeout time.Duration) (BannerResult, err
 	result := BannerResult{Port: port, Banner: banner}
 	return ParseBanner(result), nil
 }
-
+//Took top 6 most commonly encountered services, might add on to it later
 func ParseBanner(result BannerResult) BannerResult {
 	version := ""
 	os := ""
@@ -97,7 +97,7 @@ func ParseBanner(result BannerResult) BannerResult {
 		for _, line := range strings.Split(banner, "\n") {
 			if strings.Contains(line, "Server:"){
 				parts := strings.SplitN(line, ":", 2)
-				trimmed := strings.TrimSpace(parts[1]) //Parts has a leading space after `Server: `
+				trimmed := strings.TrimSpace(parts[1]) //Parts has a space after `Server: `
 				split := strings.SplitN(trimmed, "/", 2) // SimpleHTTP/0.6 Python/3.12.3 -> SimpleHTTP and 0.6 Python/3.12.3
 				result.Service = split[0]
 				result.Version = strings.Fields(split[1])[0]
