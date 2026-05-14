@@ -15,6 +15,7 @@ func Init() {
 		decryptCmd,
 		generateCmd,
 		hmacCmd,
+		analyzeCmd,
 	)
 }
 
