@@ -11,8 +11,3 @@ This project is intended for educational purposes and authorized security testin
 
 Do not use this software against systems or networks you do not own or have explicit permission to test. The author is not responsible for misuse or damage caused by this tool.
 
-
-TODO - cmd/scan/
-    hosts.go
-    banners.go 
-    service.go

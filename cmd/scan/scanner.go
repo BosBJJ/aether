@@ -11,7 +11,9 @@ var scanCmd = &cobra.Command{
 func Init() {
 	scanCmd.AddCommand(
 		portsCmd,
-		
+		hostsCmd,
+		bannersCmd,
+		serviceCmd,
 	)
 }
 

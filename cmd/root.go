@@ -4,21 +4,13 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"aether/cmd/config"
 	"aether/cmd/crypto"
 	"aether/cmd/scan"
 	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
-)
-
-var (
-    outputFormat string
-    saveToDB     bool
-    threads      int
-    timeout      int
-    quiet        bool
-    verbose      bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -50,12 +42,12 @@ func init() {
 	// will be global for your application.
 
 	// ====================== GLOBAL FLAGS ======================
-	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "table", "Output format (table, json, html)")
-	rootCmd.PersistentFlags().BoolVar(&saveToDB, "save", false, "Save scan results to database")
-	rootCmd.PersistentFlags().IntVar(&threads, "threads", 50, "Number of concurrent threads to use")
-	rootCmd.PersistentFlags().IntVar(&timeout, "timeout", 5, "Timeout in seconds for network operations")
-	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "Quiet mode - show minimal output")
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Verbose mode - show detailed output")
+	rootCmd.PersistentFlags().StringVarP(&config.OutputFormat, "output", "o", "table", "Output format (table, json, html)")
+	rootCmd.PersistentFlags().BoolVar(&config.SaveToDB, "save", false, "Save scan results to database")
+	rootCmd.PersistentFlags().IntVar(&config.Threads, "threads", 50, "Number of concurrent threads to use")
+	rootCmd.PersistentFlags().IntVar(&config.Timeout, "timeout", 5, "Timeout in seconds for network operations")
+	rootCmd.PersistentFlags().BoolVarP(&config.Quiet, "quiet", "q", false, "Quiet mode - show minimal output")
+	rootCmd.PersistentFlags().BoolVarP(&config.Verbose, "verbose", "v", false, "Verbose mode - show detailed output")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// ====================== LOCAL FLAGS ======================
@@ -65,35 +57,4 @@ func init() {
 
 	rootCmd.AddCommand(crypto.GetCryptoCmd())
 	rootCmd.AddCommand(scan.GetScanCmd())
-}
-
-
-func GetOutputFormat() string {
-    return outputFormat
-}
-
-func ShouldSave() bool {
-    return saveToDB
-}
-
-func GetThreads() int {
-    if threads <= 0 {
-        return 50
-    }
-    return threads
-}
-
-func GetTimeout() int {
-    if timeout <= 0 {
-        return 5
-    }
-    return timeout
-}
-
-func IsQuiet() bool {
-    return quiet
-}
-
-func IsVerbose() bool {
-    return verbose
 }

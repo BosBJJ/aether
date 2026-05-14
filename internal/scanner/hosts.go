@@ -66,7 +66,7 @@ func PingHosts(hosts []string, timeout time.Duration, workers int) ([]PingResult
 		go func (host string)  {
 			defer wg.Done()
 			defer func ()  { <-slots }()
-			result := pingHost(host, timeout)
+			result := PingHost(host, timeout)
 			mu.Lock()
 			results = append(results, result)
 			mu.Unlock()
@@ -77,7 +77,7 @@ func PingHosts(hosts []string, timeout time.Duration, workers int) ([]PingResult
 	return results, nil
 }
 
-func pingHost(host string, timeout time.Duration) PingResult {
+func PingHost(host string, timeout time.Duration) PingResult {
 	result := icmpPing(host, timeout)
     if result.Alive {
         return result
