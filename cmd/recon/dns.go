@@ -1,0 +1,56 @@
+package recon
+
+import (
+	"aether/internal/recon"
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
+
+var dnsCmd = &cobra.Command{
+	Use:   "dns",
+	Short: "Query given DNS",
+	Long:  ` .`,
+
+	Run: func(cmd *cobra.Command, args []string) {
+		target, _ := cmd.Flags().GetString("target")
+		fmt.Printf("looking up %s\n\n", target)
+		result, err := recon.QueryDNS(target)
+		if err != nil {
+			fmt.Printf("error :%v\n", err)
+			return
+		}
+		fmt.Println("========DNS RESULTS========")
+		fmt.Printf("Domain:      %v\n\n", result.Domain)
+		fmt.Println("A:")
+		for _, a := range result.A {
+			fmt.Printf("    -%v\n", a)
+		}
+		fmt.Println("\nAAAA:")
+		for _, r := range result.AAAA {
+			fmt.Printf("    -%v\n", r)
+		}
+		fmt.Println("\nMX:")
+		for _, r := range result.MX {
+			fmt.Printf("    - %v\n", r)
+		}
+		fmt.Println("\nNS:")
+		for _, r := range result.NS {
+			fmt.Printf("    - %v\n", r)
+		}
+		fmt.Println("\nTXT:")
+		for _, r := range result.TXT {
+			fmt.Printf("    - %v\n", r)
+		}
+		fmt.Println("\nCNAME:")
+		for _, r := range result.CNAME {
+			fmt.Printf("    - %v\n", r)
+		}
+			
+	},
+}
+
+func init() {
+	dnsCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
+	dnsCmd.MarkFlagRequired("target")
+}

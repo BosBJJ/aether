@@ -6,6 +6,7 @@ package cmd
 import (
 	"aether/cmd/config"
 	"aether/cmd/crypto"
+	"aether/cmd/recon"
 	"aether/cmd/scan"
 	"fmt"
 	"os"
@@ -57,4 +58,5 @@ func init() {
 
 	rootCmd.AddCommand(crypto.GetCryptoCmd())
 	rootCmd.AddCommand(scan.GetScanCmd())
+	rootCmd.AddCommand(recon.GetReconCmd())
 }
