@@ -13,6 +13,7 @@ func Init() {
 	reconCmd.AddCommand(
 		whoisCmd,
 		dnsCmd,
+		subCmd,
 	)
 }
 

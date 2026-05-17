@@ -9,8 +9,8 @@ import (
 
 var dnsCmd = &cobra.Command{
 	Use:   "dns",
-	Short: "Query given DNS",
-	Long:  ` .`,
+	Short: "Perform DNS reconnaissance on a domain",
+	Long:  `Queries A, AAAA, MX, NS, TXT, and CNAME records for a given domain using Google's public DNS resolver.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")

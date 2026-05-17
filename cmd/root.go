@@ -52,8 +52,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// ====================== LOCAL FLAGS ======================
-	rootCmd.Flags().Bool("toggle", false, "Help message for toggle")
-
+	
 	// ====================== REGISTER COMMANDS ======================
 
 	rootCmd.AddCommand(crypto.GetCryptoCmd())

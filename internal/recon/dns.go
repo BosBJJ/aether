@@ -26,7 +26,7 @@ func QueryDNS(domain string) (DNSResult, error){
 	if !strings.HasSuffix(domain, ".") {
 		domain = domain + "."
 	}
-	result := DNSResult{Domain: domain}
+	result := DNSResult{Domain: strings.TrimSuffix(domain, ".")}
 	
 	dnsTypes := []uint16 {
 		dns.TypeA,
@@ -65,4 +65,31 @@ func QueryDNS(domain string) (DNSResult, error){
 		}
 	}
 	return result, nil
+}
+
+type DNSResultAny struct {
+	Domain    string
+	Response  bool
+}
+
+func QueryDNSAny(domain string) DNSResultAny {
+	if domain == "" {
+		return DNSResultAny{}
+	}
+	if !strings.HasSuffix(domain, ".") {
+		domain = domain + "."
+	}
+	result := DNSResultAny{Domain: strings.TrimSuffix(domain, ".")}
+	c := new(dns.Client)
+	msg := new(dns.Msg)
+	msg.SetQuestion(domain, dns.TypeANY)
+	res, _, err := c.Exchange(msg, "8.8.8.8:53")
+	if err != nil {
+		result.Response = false
+		return result
+	}
+	if len(res.Answer) > 0 {
+		result.Response = true
+	}
+	return  result
 }
