@@ -19,7 +19,7 @@ type DNSResult struct {
 
 
 
-func QueryDNS(domain string) (DNSResult, error){
+func QueryDNS(domain, resolver string) (DNSResult, error){
 	if domain == "" {
 		return DNSResult{}, fmt.Errorf("please enter a domain")
 	}
@@ -42,7 +42,7 @@ func QueryDNS(domain string) (DNSResult, error){
 		msg := new(dns.Msg)
 		msg.SetQuestion(domain, dType)
 	
-		res, _, err := c.Exchange(msg, "8.8.8.8:53")
+		res, _, err := c.Exchange(msg, resolver)
 		if err != nil {
 			fmt.Printf("DNS query failed %d: %v", dType, err)
 			continue
@@ -72,7 +72,7 @@ type DNSResultAny struct {
 	Response  bool
 }
 
-func QueryDNSAny(domain string) DNSResultAny {
+func QueryDNSAny(domain, resolver string) DNSResultAny {
 	if domain == "" {
 		return DNSResultAny{}
 	}
@@ -83,7 +83,7 @@ func QueryDNSAny(domain string) DNSResultAny {
 	c := new(dns.Client)
 	msg := new(dns.Msg)
 	msg.SetQuestion(domain, dns.TypeANY)
-	res, _, err := c.Exchange(msg, "8.8.8.8:53")
+	res, _, err := c.Exchange(msg, resolver)
 	if err != nil {
 		result.Response = false
 		return result

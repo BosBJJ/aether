@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-func ScanSub(word, domain string) DNSResultAny {
+func ScanSub(word, domain, resolver string) DNSResultAny {
 	if domain == "" {
 		fmt.Printf("domain string empty: %v", domain)
 		return DNSResultAny{}
@@ -17,10 +17,10 @@ func ScanSub(word, domain string) DNSResultAny {
 		return DNSResultAny{} 
 	}
 	subdomain := word + "." + domain
-	return QueryDNSAny(subdomain)
+	return QueryDNSAny(subdomain, resolver)
 }
 
-func ScanSubs(domain, wordPath string, workers int) (<- chan DNSResultAny, error) {
+func ScanSubs(domain, wordPath, resolver string, workers int) (<- chan DNSResultAny, error) {
 	list, err := os.Open(wordPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open word list: %v", err)
@@ -36,7 +36,7 @@ func ScanSubs(domain, wordPath string, workers int) (<- chan DNSResultAny, error
 		go func ()  {
 			defer wg.Done()
 			for w := range word {
-				results <- ScanSub(w, domain)
+				results <- ScanSub(w, domain, resolver)
 			}
 		}()
 	}

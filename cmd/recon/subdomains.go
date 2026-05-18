@@ -20,6 +20,7 @@ Use --threads to control concurrency (default 50).`,
 		target, _ := cmd.Flags().GetString("target")
 		threads, _ := cmd.Root().PersistentFlags().GetInt("threads")
 		size, _ := cmd.Flags().GetString("size")
+		resolver, _ := cmd.Flags().GetString("resolver")
 		path := ""
 		numWords := ""
 		switch size {
@@ -36,7 +37,7 @@ Use --threads to control concurrency (default 50).`,
 			path = "data/wordlists/subdomains-top1million-5000.txt"
 			numWords = "5000"
 		}
-		wildcardTest := recon.ScanSub("thisshouldneverwork", target)
+		wildcardTest := recon.ScanSub("thisshouldneverwork", target, resolver)
 		if wildcardTest.Response {
 			fmt.Println("Domain using wildcard")
 			return
@@ -44,7 +45,7 @@ Use --threads to control concurrency (default 50).`,
 		fmt.Println("Domain not using wildcard")
 		subsFound := false
 		fmt.Printf("Preparing scan for domain: %v with %v words",target, numWords)
-		res, err := recon.ScanSubs(target, path, threads)
+		res, err := recon.ScanSubs(target, path, resolver, threads)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
     		return
@@ -66,7 +67,7 @@ Use --threads to control concurrency (default 50).`,
 func init() {
 	subCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
 	subCmd.Flags().StringP("size", "s", "small", "Wordlist size: small, medium, large")
-	
+	subCmd.Flags().StringP("resolver", "r", "8.8.8.8:53", "DNS resolver to use")
 	subCmd.MarkFlagRequired("target")
 
 }

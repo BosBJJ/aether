@@ -14,8 +14,9 @@ var dnsCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
+		resolver, _ := cmd.Flags().GetString("resolver")
 		fmt.Printf("looking up %s\n\n", target)
-		result, err := recon.QueryDNS(target)
+		result, err := recon.QueryDNS(target, resolver)
 		if err != nil {
 			fmt.Printf("error :%v\n", err)
 			return
@@ -52,5 +53,6 @@ var dnsCmd = &cobra.Command{
 
 func init() {
 	dnsCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
+	dnsCmd.Flags().StringP("resolver", "r", "8.8.8.8:53", "DNS resolver to use")
 	dnsCmd.MarkFlagRequired("target")
 }
