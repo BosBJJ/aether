@@ -42,11 +42,14 @@ func ScanSubs(domain, wordPath, resolver string, workers int) (<- chan DNSResult
 	}
 	
 	go func() {
+		defer close(word)
+		defer list.Close()
 		for scanner.Scan() {
 			word <- scanner.Text()
 		}
-		close(word)
-		list.Close()
+		if err := scanner.Err(); err != nil {
+			fmt.Printf("scan error: %v\n", err)
+		}
 	}()
 	go func() {
 		wg.Wait()

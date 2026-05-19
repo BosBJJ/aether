@@ -14,6 +14,7 @@ func Init() {
 		whoisCmd,
 		dnsCmd,
 		subCmd,
+		passiveCmd,
 	)
 }
 

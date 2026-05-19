@@ -44,7 +44,7 @@ Use --threads to control concurrency (default 50).`,
 		}
 		fmt.Println("Domain not using wildcard")
 		subsFound := false
-		fmt.Printf("Preparing scan for domain: %v with %v words",target, numWords)
+		fmt.Printf("Preparing scan for domain: %v with %v words\n",target, numWords)
 		res, err := recon.ScanSubs(target, path, resolver, threads)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
@@ -57,7 +57,7 @@ Use --threads to control concurrency (default 50).`,
 			}
 		}
 		if !subsFound {
-			fmt.Printf("No subdomains found for: %v", target)
+			fmt.Printf("No subdomains found for: %v\n", target)
 		}
 		
 			
