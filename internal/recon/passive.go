@@ -16,12 +16,12 @@ type PassiveResult struct {
     LastSeen      string 		`json:"last_seen,omitempty"`
 }
 
-func PassiveRecon(domain string) (PassiveResult, error) {
+func PassiveRecon(domain string, limit int) (PassiveResult, error) {
 	if domain == "" {
 		return PassiveResult{}, fmt.Errorf("domain empty")
 	}
 
-	url := "https://crt.sh/?q=%25." + domain + "&output=json"
+	url := fmt.Sprintf("https://crt.sh/?q=%%25.%v&output=json&limit=%v", domain, limit)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return PassiveResult{}, fmt.Errorf("failed to make request: %v", err)

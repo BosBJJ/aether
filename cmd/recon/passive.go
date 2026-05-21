@@ -16,11 +16,12 @@ var passiveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
 		jsonOut, _ := cmd.Flags().GetBool("json")
+		limit, _ := cmd.Flags().GetInt("limit")
 		fmt.Printf("looking up %s\n\n", target)
 
-		result, err := recon.PassiveRecon(target)
+		result, err := recon.PassiveRecon(target, limit)
 		if err != nil {
-			fmt.Printf("error: %v", err)
+			fmt.Printf("error: %v\n", err)
 			return
 		}
 		
@@ -41,7 +42,7 @@ var passiveCmd = &cobra.Command{
 			return
 		}
 		fmt.Printf("Certificates found: %v\n", result.TotalCerts)
-		fmt.Println("Subdomains: ")
+		fmt.Println("Unique subdomains: ")
 		for _, sub := range result.Subdomains {
 			fmt.Printf("-     %v\n", sub)
 		}
@@ -53,5 +54,7 @@ var passiveCmd = &cobra.Command{
 func init() {
 	passiveCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
 	passiveCmd.Flags().BoolP("json", "j", false, "Output results as JSON")
+	passiveCmd.Flags().IntP("limit", "l", 100, "Maximum number of certificate records to fetch")
+
 	passiveCmd.MarkFlagRequired("target")
 }
