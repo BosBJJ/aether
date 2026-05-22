@@ -6,6 +6,7 @@ package cmd
 import (
 	"aether/cmd/config"
 	"aether/cmd/crypto"
+	"aether/cmd/http"
 	"aether/cmd/recon"
 	"aether/cmd/scan"
 	"fmt"
@@ -49,6 +50,7 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&config.Timeout, "timeout", 5, "Timeout in seconds for network operations")
 	rootCmd.PersistentFlags().BoolVarP(&config.Quiet, "quiet", "q", false, "Quiet mode - show minimal output")
 	rootCmd.PersistentFlags().BoolVarP(&config.Verbose, "verbose", "v", false, "Verbose mode - show detailed output")
+	rootCmd.PersistentFlags().BoolVarP(&config.Pretty, "pretty", "p", false, "Pretty print JSON output")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// ====================== LOCAL FLAGS ======================
@@ -58,4 +60,5 @@ func init() {
 	rootCmd.AddCommand(crypto.GetCryptoCmd())
 	rootCmd.AddCommand(scan.GetScanCmd())
 	rootCmd.AddCommand(recon.GetReconCmd())
+	rootCmd.AddCommand(http.GetHTTPCmd())
 }

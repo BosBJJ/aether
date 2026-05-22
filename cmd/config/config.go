@@ -8,6 +8,7 @@ var (
     Timeout      int
     Quiet        bool
     Verbose      bool
+    Pretty       bool
 )
 
 func GetOutputFormat() string {
@@ -38,4 +39,8 @@ func IsQuiet() bool {
 
 func IsVerbose() bool {
     return Verbose
+}
+
+func GetPretty() bool {
+    return Pretty
 }

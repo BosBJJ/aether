@@ -1,6 +1,7 @@
 package httpinspect
 
 import (
+	"aether/internal/utils"
 	"io"
 	"net/http"
 	"strings"
@@ -31,6 +32,7 @@ func Fetch(url string, timeout int) HTTPResponse {
 	if url == "" {
 		return HTTPResponse{}
 	}
+	url = utils.NormalizeURL(url)
 	result := HTTPResponse{URL: url}
 	var redirects []string
 	client := &http.Client{
