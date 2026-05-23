@@ -13,7 +13,8 @@ type HeaderResult struct {
 func AnalyzeHeaders(url string, timeout int) []HeaderResult {
 	data := Fetch(url, timeout)
 	if data.Error != "" {
-		fmt.Printf("error: %v", data.Error)
+		fmt.Printf("error: %v\n", data.Error)
+		return nil
 	}
 	var results []HeaderResult
 	for _, check := range SecurityHeaders {

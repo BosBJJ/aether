@@ -64,7 +64,7 @@ Use --json to output raw results as JSON.`,
 				secHeaders = append(secHeaders, h)
 			}
 		}
-		
+		fmt.Println()
 		fmt.Println("Security Headers:")
 		fmt.Println("==================")
 		for _, h := range secHeaders {

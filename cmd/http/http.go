@@ -13,6 +13,7 @@ func Init() {
 	httpCmd.AddCommand(
 		infoCmd,
 		headerCmd,
+		fingerprintCmd,
 	)
 }
 
