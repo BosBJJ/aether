@@ -14,6 +14,7 @@ func Init() {
 		infoCmd,
 		headerCmd,
 		fingerprintCmd,
+		analyzeCmd,
 	)
 }
 
