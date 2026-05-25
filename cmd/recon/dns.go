@@ -2,6 +2,7 @@ package recon
 
 import (
 	"aether/internal/recon"
+	"aether/internal/utils"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -15,12 +16,27 @@ var dnsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
 		resolver, _ := cmd.Flags().GetString("resolver")
-		fmt.Printf("looking up %s\n\n", target)
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
+
+		if output == "table" {
+			fmt.Printf("looking up %v\n\n", target)
+		}
+
 		result, err := recon.QueryDNS(target, resolver)
 		if err != nil {
 			fmt.Printf("error :%v\n", err)
 			return
 		}
+
+		if output == "json" {
+			err := utils.PrintJSON(result)
+			if err != nil {
+				fmt.Printf("error printing json: %v\n", err)
+				return
+			}
+			return
+		}
+
 		fmt.Println("========DNS RESULTS========")
 		fmt.Printf("Domain:      %v\n\n", result.Domain)
 		fmt.Println("A:")

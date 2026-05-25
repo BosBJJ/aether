@@ -22,12 +22,9 @@ Use --json to output results as JSON.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
-		jsonOut, _ := cmd.Flags().GetBool("json")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
 
-		if !jsonOut {
-			fmt.Printf("looking up %s\n\n", target)
-		}
 
 		result := httpinspect.GetTechStack(target, timeout)
 		if result == nil {
@@ -40,7 +37,7 @@ Use --json to output results as JSON.`,
 			out = append(out, TechStackJSON{Name: sig.Name, Category: sig.Category})
 		}
 
-		if jsonOut {
+		if output == "json" {
 			err := utils.PrintJSON(out)
 			if err != nil {
 				fmt.Printf("error printing json: %v\n", err)
@@ -66,7 +63,6 @@ Use --json to output results as JSON.`,
 
 func init() {
 	fingerprintCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
-	fingerprintCmd.Flags().BoolP("json", "j", false, "Output results as JSON")
 
 	fingerprintCmd.MarkFlagRequired("target")
 }

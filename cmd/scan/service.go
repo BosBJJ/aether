@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"aether/internal/scanner"
+	"aether/internal/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -24,6 +25,7 @@ var serviceCmd = &cobra.Command{
 		var openPorts []int
 		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
 		threads, _ := cmd.Root().PersistentFlags().GetInt("threads")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 
 		switch {
 		case all:
@@ -38,7 +40,9 @@ var serviceCmd = &cobra.Command{
 		default:
 			ports = []int{80, 443, 22, 21, 25}
 		}
-		fmt.Printf("Starting service scan on %s (%d ports)...\n", target, len(ports))
+		if output == "table" {
+			fmt.Printf("Starting service scan on %s (%d ports)...\n", target, len(ports))
+		}
 		scannedPorts, err := scanner.ScanPorts(target, ports, time.Duration(timeout)*time.Second, threads)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
@@ -49,8 +53,12 @@ var serviceCmd = &cobra.Command{
 				openPorts = append(openPorts, scannedPort.Port)
 			}
 		}
-		fmt.Printf("open ports found: %d\n\n",len(openPorts))
-		fmt.Printf("grabbing banners\n\n")
+		
+		if output == "table" {
+			fmt.Printf("open ports found: %d\n\n",len(openPorts))
+			fmt.Printf("grabbing banners\n\n")
+		}
+		var serviceResults []ServiceResult
 		for _, port := range openPorts {
 			result, err := scanner.GrabBanner(target, port, time.Duration(timeout)*time.Second)
 			if err != nil {
@@ -58,13 +66,32 @@ var serviceCmd = &cobra.Command{
 				continue
 			}
 			if result.Banner == "" && result.Service == "" {
-				fmt.Printf("port %d: no banner\n\n", port)
+				if output == "table" {
+					fmt.Printf("port %d: no banner\n\n", port)
+				}
     			continue
 			}
-			fmt.Println("results for port:", result.Port)
-			fmt.Printf("raw banner: %v\n", result.Banner)
-			fmt.Printf("service: %v\nversion: %v\nos :%v\n\n", result.Service, result.Version, result.OS)
+			serviceResults = append(serviceResults, ServiceResult{
+				Port: result.Port,
+				State: "Open",
+				Banner: result.Banner,
+				Service: result.Service,
+				Version: result.Version,
+				OS: result.OS,
+			})
+			if output == "table" {
+				fmt.Println("results for port:", result.Port)
+				fmt.Printf("raw banner: %v\n", result.Banner)
+				fmt.Printf("service: %v\nversion: %v\nos :%v\n\n", result.Service, result.Version, result.OS)
 			}
+		}
+		if output == "json" {
+			err = utils.PrintJSON(serviceResults)
+			if err != nil {
+				fmt.Printf("error marshalling json: %v\n", err)
+				return
+			}
+		}	
 	},
 }
 
@@ -75,4 +102,13 @@ func init() {
 	serviceCmd.Flags().Bool("top1000", false, "Use top 1000 common ports")
 
 	serviceCmd.MarkFlagRequired("target")
+}
+
+type ServiceResult struct {
+	Port    int    	`json:"port"`
+    State   string 	`json:"state"`
+    Banner  string 	`json:"banner,omitempty"`
+    Service string 	`json:"service,omitempty"`
+    Version string 	`json:"version,omitempty"`
+    OS      string 	`json:"os,omitempty"`
 }

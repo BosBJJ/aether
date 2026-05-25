@@ -2,6 +2,7 @@ package recon
 
 import (
 	"aether/internal/recon"
+	"aether/internal/utils"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -21,6 +22,8 @@ Use --threads to control concurrency (default 50).`,
 		threads, _ := cmd.Root().PersistentFlags().GetInt("threads")
 		size, _ := cmd.Flags().GetString("size")
 		resolver, _ := cmd.Flags().GetString("resolver")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
+
 		path := ""
 		numWords := ""
 		switch size {
@@ -37,26 +40,44 @@ Use --threads to control concurrency (default 50).`,
 			path = "data/wordlists/subdomains-top1million-5000.txt"
 			numWords = "5000"
 		}
+
 		wildcardTest := recon.ScanSub("thisshouldneverwork", target, resolver)
 		if wildcardTest.Response {
 			fmt.Println("Domain using wildcard")
 			return
 		}
-		fmt.Println("Domain not using wildcard")
-		subsFound := false
-		fmt.Printf("Preparing scan for domain: %v with %v words\n",target, numWords)
+
+		if output == "table" {
+			fmt.Println("Domain not using wildcard")
+			fmt.Printf("Preparing scan for domain: %v with %v words\n",target, numWords)
+		}
+
 		res, err := recon.ScanSubs(target, path, resolver, threads)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
     		return
 		}
+
+		var hits []recon.DNSResultAny
 		for r := range res {
 			if r.Response {
-				subsFound = true
-				fmt.Printf("--   %v\n",r.Domain)
+				if output == "table" {
+					fmt.Printf("--   %v\n",r.Domain)
+				}
+				hits = append(hits, r)
 			}
 		}
-		if !subsFound {
+
+		if output == "json" {
+			err := utils.PrintJSON(hits)
+			if err != nil {
+				fmt.Printf("error printing json: %v\n", err)
+			}
+			return
+		}
+
+		
+		if len(hits) == 0 {
 			fmt.Printf("No subdomains found for: %v\n", target)
 		}
 		

@@ -3,8 +3,10 @@ package crypto
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"aether/internal/crypto"
+	"aether/internal/utils"
+
+	"github.com/spf13/cobra"
 )
 
 var analyzeCmd = &cobra.Command{
@@ -14,12 +16,30 @@ var analyzeCmd = &cobra.Command{
 	Args: cobra.MinimumNArgs(1),
 
 	Run: func(cmd *cobra.Command, args []string) {
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
+
 		password := args[0]
-		if password == "" {
-			fmt.Println("Error: Password cannot be empty")
+
+        res := crypto.AnalyzePassword(password)
+
+		if output == "json" {
+			err := utils.PrintJSON(res)
+			if err != nil {
+				fmt.Printf("error printing json: %v\n", err)
+				return
+			}
 			return
 		}
-        crypto.AnalyzePassword(password)
+
+		fmt.Printf("Password Entropy: %.2f bits\n", res.Entropy)
+		fmt.Printf("Crack Time : %s\n", res.CrackTime)
+		for i, m := range res.MatchSequence {
+			fmt.Printf(" %d. %-12s Token: %-15s Entropy: %.2f bits\n",
+			i+1,
+			"["+m.Pattern+"]",
+			"'"+m.Token+"'",
+			m.Entropy)
+		}
 	},
 }
 

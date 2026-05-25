@@ -14,8 +14,8 @@ const (
 )
 
 type ScanResult struct {
-	Port 	int
-	State 	string
+	Port 	int			`json:"port"`
+	State 	string		`json:"state"`
 }
 
 func ScanPorts(host string, ports []int, timeout time.Duration, workers int) ([]ScanResult, error) {

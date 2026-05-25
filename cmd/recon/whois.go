@@ -2,6 +2,7 @@ package recon
 
 import (
 	"aether/internal/recon"
+	"aether/internal/utils"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -14,11 +15,25 @@ var whoisCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
-		fmt.Printf("looking up %s\n\n", target)
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
+
+		if output == "table" {
+			fmt.Printf("looking up %s\n\n", target)
+		}
+		
 		result, err := recon.Lookup(target)
 		if err != nil {
 			fmt.Printf("error :%v\n", err)
 		}
+		
+		if output == "json" {
+			err = utils.PrintJSON(result)
+			if err != nil {
+				fmt.Printf("error printing json: %v\n", err)
+			}
+			return
+		}
+		
 		fmt.Println("=====WHOIS RESULTS=====")
 		fmt.Printf("Domain:      %v\n", result.Domain)
 		fmt.Printf("Registrar:   %v\n", result.Registrar)

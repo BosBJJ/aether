@@ -61,15 +61,31 @@ func GeneratePassword(length int, hasSpecial, hasUppercase bool) (string, error)
 	return string(result), nil
 }
 
-func AnalyzePassword(password string) {
+func AnalyzePassword(password string) PasswordAnalysis {
 	res := zxcvbn.PasswordStrength(password, nil)
-	fmt.Printf("Password Entropy: %.2f bits\n", res.Entropy)
-	fmt.Printf("Crack Time     : %s\n", res.CrackTimeDisplay)
-	for i, m := range res.MatchSequence {
-		fmt.Printf("  %d. %-12s  Token: %-15s  Entropy: %.2f bits\n", 
-			i+1, 
-			"["+m.Pattern+"]", 
-			"'"+m.Token+"'", 
-			m.Entropy)
+	var matches []MatchResult
+	for _, m := range res.MatchSequence {
+		matches = append(matches, MatchResult{
+			Pattern: m.Pattern,
+			Token: m.Token,
+			Entropy: m.Entropy,
+		})
 	}
+	return PasswordAnalysis{
+		Entropy: res.Entropy,
+		CrackTime: res.CrackTimeDisplay,
+		MatchSequence: matches,
+	}
+}
+
+type PasswordAnalysis struct {
+	Entropy 		float64 			`json:"entropy"`
+	CrackTime		string				`json:"crack_time"`
+	MatchSequence 	[]MatchResult 		`json:"match_sequence"` 
+}
+
+type MatchResult struct {
+	Pattern 		string 				`json:"pattern"`
+	Token 			string 				`json:"token"`
+	Entropy			float64				`json:"entropy"`
 }

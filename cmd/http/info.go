@@ -16,7 +16,7 @@ var infoCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
-		jsonOut, _ := cmd.Flags().GetBool("json")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
 
 		fmt.Printf("looking up %s\n\n", target)
@@ -27,7 +27,7 @@ var infoCmd = &cobra.Command{
 			return
 		}
 
-		if jsonOut {
+		if output == "json" {
 			if len(result.Body) > 1000 {
 				result.Body = result.Body[:1000]
 			}

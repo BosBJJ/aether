@@ -12,10 +12,10 @@ import (
 )
 
 type PingResult struct {
-	IP 		string
-	Alive 	bool
-	Latency time.Duration
-	Error 	error
+	IP 		string				`json:"ip"`
+	Alive 	bool				`json:"alive"`
+	Latency float64				`json:"latency_ms,omitempty"`
+	Error 	string				`json:"error,omitempty"`
 }
 
 
@@ -95,12 +95,12 @@ func icmpPing(host string, timeout time.Duration) PingResult {
 	result := PingResult{}
 	addr, err := net.ResolveIPAddr("ip4", host)
 	if err != nil {
-		return PingResult{IP: host, Error: err}
+		return PingResult{IP: host, Error: err.Error()}
 	}
 	conn, err := net.ListenPacket("ip4:icmp", "0.0.0.0")
 	if err != nil {
 		result.IP = addr.IP.String()
-		result.Error = err
+		result.Error = err.Error()
 		return result
 	}
 	result.IP = addr.IP.String()
@@ -116,30 +116,30 @@ func icmpPing(host string, timeout time.Duration) PingResult {
 	}
 	msgByte, err := msg.Marshal(nil)
 	if err != nil {
-		result.Error = err
+		result.Error = err.Error()
 		return result
 	}
 	start := time.Now()
 	conn.SetDeadline(time.Now().Add(timeout))
 	_, err = conn.WriteTo(msgByte, addr) 
 	if err != nil {
-		result.Error = err
+		result.Error = err.Error()
 		return result
 	}
 	respB := make([]byte, 1024)
 	for {
 		n, _, err := conn.ReadFrom(respB)
 		if err != nil {
-			result.Error = err
+			result.Error = err.Error()
 			return result
 		}
 		resp, err := icmp.ParseMessage(ipv4.ICMPTypeEchoReply.Protocol(), respB[:n])
 		if err != nil {
-			result.Error = err
+			result.Error = err.Error()
 			return result
 		}
 		if resp.Type == ipv4.ICMPTypeEchoReply {
-			lat := time.Since(start)
+			lat := time.Since(start).Seconds() * 1000
 			result.Latency = lat
 			result.Alive = true
 			return  result
@@ -157,13 +157,13 @@ func tcpPing(host string, port int, timeout time.Duration) PingResult {
 		return PingResult{
 			IP: host,
 			Alive: false,
-			Error: err,
+			Error: err.Error(),
 		}
 	}
 	defer conn.Close()
 	return PingResult{
 		IP: host,
 		Alive: true,
-		Latency: time.Since(start),
+		Latency: time.Since(start).Seconds() * 1000,
 	}
 }

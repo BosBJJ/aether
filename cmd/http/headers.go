@@ -22,12 +22,9 @@ Use --json to output raw results as JSON.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
-		jsonOut, _ := cmd.Flags().GetBool("json")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
 
-		if !jsonOut {
-			fmt.Printf("looking up %s\n\n", target)
-		}
 
 		result := httpinspect.AnalyzeHeaders(target, timeout)
 		if result == nil {
@@ -44,7 +41,7 @@ Use --json to output raw results as JSON.`,
 			})
 		}
 
-		if jsonOut {
+		if output == "json" {
 			err := utils.PrintJSON(out)
 			if err != nil {
 				fmt.Printf("error printing json: %v\n", err)

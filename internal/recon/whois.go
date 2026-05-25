@@ -15,7 +15,7 @@ type WhoisResult struct {
 	UpdatedDate string   `json:"updated_date"`
 	Nameservers []string `json:"nameservers"`
 	Status      []string `json:"status"`
-	Raw 		string	 `json:"raw,omitempty"`
+	Raw 		string	 `json:"-"`
 }
 
 

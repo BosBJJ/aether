@@ -13,11 +13,11 @@ import (
 
 
 type BannerResult struct {
-	Port 		int
-	Banner 		string
-	Service 	string
-	Version 	string
-	OS			string
+	Port 		int			`json:"port"`
+	Banner 		string		`json:"banner,omitempty"`
+	Service 	string		`json:"service"`
+	Version 	string		`json:"version,omitempty"`
+	OS			string		`json:"os,omitempty"`
 }
 
 func GrabBanner(host string, port int, timeout time.Duration) (BannerResult, error) {
@@ -76,6 +76,10 @@ func ParseBanner(result BannerResult) BannerResult {
 		if len(fields) < 1 {
 			break
 		}
+		if len(fields) < 2 {
+			version = fields[0]
+			break
+		}
 		version = fields[0]
 		os = fields[1]
 		result.Service = "SSH"
@@ -100,7 +104,9 @@ func ParseBanner(result BannerResult) BannerResult {
 				trimmed := strings.TrimSpace(parts[1]) //Parts has a space after `Server: `
 				split := strings.SplitN(trimmed, "/", 2) // SimpleHTTP/0.6 Python/3.12.3 -> SimpleHTTP and 0.6 Python/3.12.3
 				result.Service = split[0]
-				result.Version = strings.Fields(split[1])[0]
+				if len(split) > 1 && len(strings.Fields(split[1])) > 0 {
+					result.Version = strings.Fields(split[1])[0]
+				}
 			}
 		}
 	default:

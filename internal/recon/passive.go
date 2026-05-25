@@ -33,7 +33,10 @@ func PassiveRecon(domain string, limit int) (PassiveResult, error) {
 		return PassiveResult{}, fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
-
+	var ErrCrtShUnavailable = fmt.Errorf("crt.sh is temporarily unavailable")
+	if resp.StatusCode == http.StatusBadGateway {
+    return PassiveResult{}, ErrCrtShUnavailable
+	}
 	if resp.StatusCode != http.StatusOK {
 		return PassiveResult{}, fmt.Errorf("crt.sh returned status %d", resp.StatusCode)
 	}

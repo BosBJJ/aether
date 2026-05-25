@@ -9,12 +9,12 @@ import (
 
 type DNSResult struct {
 	Domain 	string 		`json:"domain"`
-	A 		[]string	`json:"a"`
-	AAAA 	[]string	`json:"aaaa"`
-	MX 		[]string	`json:"mx"`
-	NS 		[]string	`json:"ns"`
-	TXT 	[]string 	`json:"txt"`
-	CNAME 	[]string	`json:"cname"`
+	A 		[]string	`json:"a,omitempty"`
+	AAAA 	[]string	`json:"aaaa,omitempty"`
+	MX 		[]string	`json:"mx,omitempty"`
+	NS 		[]string	`json:"ns,omitempty"`
+	TXT 	[]string 	`json:"txt,omitempty"`
+	CNAME 	[]string	`json:"cname,omitempty"`
 }
 
 
@@ -68,8 +68,8 @@ func QueryDNS(domain, resolver string) (DNSResult, error){
 }
 
 type DNSResultAny struct {
-	Domain    string
-	Response  bool
+	Domain    string	`json:"domain"`
+	Response  bool		`json:"response"`
 }
 
 func QueryDNSAny(domain, resolver string) DNSResultAny {

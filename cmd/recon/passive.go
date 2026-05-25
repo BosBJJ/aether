@@ -2,7 +2,7 @@ package recon
 
 import (
 	"aether/internal/recon"
-	"encoding/json"
+	"aether/internal/utils"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -15,9 +15,8 @@ var passiveCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
-		jsonOut, _ := cmd.Flags().GetBool("json")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 		limit, _ := cmd.Flags().GetInt("limit")
-		fmt.Printf("looking up %s\n\n", target)
 
 		result, err := recon.PassiveRecon(target, limit)
 		if err != nil {
@@ -25,13 +24,12 @@ var passiveCmd = &cobra.Command{
 			return
 		}
 		
-		if jsonOut {
-			data, err := json.Marshal(result)
+		if output == "json" {
+			err := utils.PrintJSON(result)
 			if err != nil {
 				fmt.Printf("error marshalling json: %v\n", err)
         		return
 			}
-			fmt.Println(string(data))
     		return
 		}
 
@@ -53,7 +51,6 @@ var passiveCmd = &cobra.Command{
 
 func init() {
 	passiveCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
-	passiveCmd.Flags().BoolP("json", "j", false, "Output results as JSON")
 	passiveCmd.Flags().IntP("limit", "l", 100, "Maximum number of certificate records to fetch")
 
 	passiveCmd.MarkFlagRequired("target")

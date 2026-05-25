@@ -7,6 +7,7 @@ import (
 
 	"aether/cmd/config"
 	"aether/internal/scanner"
+	"aether/internal/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -20,35 +21,43 @@ var hostsCmd = &cobra.Command{
 		target, _ := cmd.Flags().GetString("target")
 		targets, _ := cmd.Flags().GetString("targets")
 		cidr, _ := cmd.Flags().GetString("cidr")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 
 		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
 		threads, _ := cmd.Root().PersistentFlags().GetInt("threads")
 
+		var results []scanner.PingResult
 		switch  {
 		case target != "":
-			result := scanner.PingHost(target, time.Duration(timeout)*time.Second)
-			printPingResult(result)
+			results = append(results, scanner.PingHost(target, time.Duration(timeout)*time.Second))
+			
 		case targets != "":
 			hosts := strings.Split(targets, ",")
-			results, err := scanner.PingHosts(hosts, time.Duration(timeout)*time.Second, threads)
+			res, err := scanner.PingHosts(hosts, time.Duration(timeout)*time.Second, threads)
 			if err != nil {
 				fmt.Println("error:", err)
         		return
 			}
-			for _, result := range results {
-				printPingResult(result)
-			}
+			results = append(results, res...)
 		case cidr != "":
-			results, err := scanner.SweepCIDR(cidr, time.Duration(timeout)*time.Second, threads)
+			res, err := scanner.SweepCIDR(cidr, time.Duration(timeout)*time.Second, threads)
 			if err != nil {
 				fmt.Println("error:", err)
         		return
 			}
-			for _, result := range results {
-				printPingResult(result)
-			}
+			results = append(results, res...)
 		}
-		fmt.Println("Scan complete")
+		if output == "json" {
+			err := utils.PrintJSON(results)
+			if err != nil {
+				fmt.Printf("error marshalling json: %v\n", err)
+			}
+			return
+		}
+
+		for _, res := range results {
+			printPingResult(res)
+		}
 	},
 }
 
@@ -61,7 +70,7 @@ func init() {
 
 func printPingResult(result scanner.PingResult) {
 	if result.Alive{
-		fmt.Printf("%-20s ALIVE  latency: %.3fms\n", result.IP, result.Latency.Seconds()*1000)
+		fmt.Printf("%-20s ALIVE  latency: %.3fms\n", result.IP, result.Latency)
 	} else if config.IsVerbose() {
         fmt.Printf("%-20s DEAD\n", result.IP)
     }

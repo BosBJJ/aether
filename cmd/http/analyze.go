@@ -16,13 +16,11 @@ var analyzeCmd = &cobra.Command{
 	Long:  `Fetches a URL and inspects it for security concerns including:
 - Suspicious or sensitive query parameters (e.g. redirect, token, next)
 - Suspicious TLDs commonly associated with phishing
-- Open redirect indicators across the full redirect chain
-
-Use --json to output results in JSON format.`,
+- Open redirect indicators across the full redirect chain.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		target, _ := cmd.Flags().GetString("target")
-		jsonOut, _ := cmd.Flags().GetBool("json")
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
 
 		result, err := httpinspect.AnalyzeURL(target, timeout)
@@ -32,7 +30,7 @@ Use --json to output results in JSON format.`,
 		}
 
 
-		if jsonOut {
+		if output == "json" {
 			err := utils.PrintJSON(result)
 			if err != nil {
 				fmt.Printf("error printing json: %v\n", err)
@@ -67,7 +65,6 @@ Use --json to output results in JSON format.`,
 
 func init() {
 	analyzeCmd.Flags().StringP("target", "t", "", "Domain or IP to query")
-	analyzeCmd.Flags().BoolP("json", "j", false, "Output results as JSON")
 
 	analyzeCmd.MarkFlagRequired("target")
 }

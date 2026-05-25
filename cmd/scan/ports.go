@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"aether/cmd/config"
 	"aether/internal/scanner"
+	"aether/internal/utils"
+
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +21,10 @@ var portsCmd = &cobra.Command{
 		top100, _ := cmd.Flags().GetBool("top100")
 		top1000, _ := cmd.Flags().GetBool("top1000")
 		all, _ := cmd.Flags().GetBool("all")
-		timeout, _ := cmd.Flags().GetInt("timeout")
-		threads, _ := cmd.Flags().GetInt("threads")
-		verbose, _ := cmd.Flags().GetBool("verbose")
+		timeout, _ := cmd.Root().PersistentFlags().GetInt("timeout")
+		threads, _ := cmd.Root().PersistentFlags().GetInt("threads")
+		verbose := config.IsVerbose()
+		output, _ := cmd.Root().PersistentFlags().GetString("output")
 
 
 		var ports []int
@@ -43,6 +47,16 @@ var portsCmd = &cobra.Command{
 			fmt.Printf("error: %v\n", err)
    			 return
 		}
+
+		if output == "json" {
+			err = utils.PrintJSON(results)
+			if err != nil {
+				fmt.Printf("error: %v\n", err)
+			}
+			return
+		}
+
+
 		fmt.Printf("Scan completed for %s\n", target)
 		for _, result := range results {
 			if result.State == "Open" || verbose {

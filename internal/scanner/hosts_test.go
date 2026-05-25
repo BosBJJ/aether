@@ -10,7 +10,7 @@ func TestICMPPing(t *testing.T) {
     t.Logf("IP: %s", result.IP)
     t.Logf("Alive: %v", result.Alive)
     t.Logf("Latency: %v", result.Latency)
-    if result.Error != nil {
+    if result.Error != "" {
         t.Logf("Error: %v", result.Error)
     }
 }
@@ -33,7 +33,7 @@ func TestCIDR(t *testing.T) {
 }
 for _, r := range results {
     if r.Alive {
-        t.Logf("ALIVE  %s  latency: %.3fms", r.IP, r.Latency.Seconds()*1000)
+        t.Logf("ALIVE  %s  latency: %.3fms", r.IP, r.Latency)
     } else {
         t.Logf("DEAD   %s", r.IP)
     }
