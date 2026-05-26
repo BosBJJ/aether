@@ -1,5 +1,7 @@
 package config
 
+import "database/sql"
+
 
 var (
     OutputFormat string
@@ -9,6 +11,7 @@ var (
     Quiet        bool
     Verbose      bool
     Pretty       bool
+    DB           *sql.DB
 )
 
 func GetOutputFormat() string {
