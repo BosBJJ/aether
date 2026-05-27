@@ -8,6 +8,7 @@ import (
 	"aether/cmd/crypto"
 	"aether/cmd/http"
 	"aether/cmd/recon"
+	"aether/cmd/report"
 	"aether/cmd/scan"
 	"fmt"
 	"os"
@@ -23,10 +24,10 @@ var rootCmd = &cobra.Command{
 	Built entirely in Go, it demonstrates strong backend development practices through high-performance tools, secure coding, and clean architecture.
 	
 	This project is intended for educational purposes and authorized security testing only.`,
-	
+
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Welcome to Aether! Use --help to see available commands.")
-	 },
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -54,11 +55,12 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// ====================== LOCAL FLAGS ======================
-	
+
 	// ====================== REGISTER COMMANDS ======================
 
 	rootCmd.AddCommand(crypto.GetCryptoCmd())
 	rootCmd.AddCommand(scan.GetScanCmd())
 	rootCmd.AddCommand(recon.GetReconCmd())
 	rootCmd.AddCommand(http.GetHTTPCmd())
+	rootCmd.AddCommand(report.GetReportCmd())
 }
