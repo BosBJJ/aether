@@ -1,8 +1,11 @@
 package http
 
 import (
+	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/httpinspect"
 	"aether/internal/utils"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
@@ -27,6 +30,24 @@ var analyzeCmd = &cobra.Command{
 		if err != nil {
 			fmt.Printf("error analyzing headers for %v: %v\n", target, err)
 			return
+		}
+
+		if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(result)
+			if err != nil {
+				fmt.Printf("error marshalling scan result: %v\n", err)
+				return
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "http analyze",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Risk Level: %v, Findings: %v", result.RiskLevel, len(result.Findings)),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
 		}
 
 

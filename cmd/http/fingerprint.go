@@ -1,8 +1,11 @@
 package http
 
 import (
+	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/httpinspect"
 	"aether/internal/utils"
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -35,6 +38,23 @@ Use --json to output results as JSON.`,
 		var out []TechStackJSON
 		for _, sig := range result {
 			out = append(out, TechStackJSON{Name: sig.Name, Category: sig.Category})
+		}
+
+		if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(out)
+			if err != nil {
+				fmt.Printf("error marshalling results: %v",err)
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "http fingerprint",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Detected %v technologies", len(out)),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
 		}
 
 		if output == "json" {

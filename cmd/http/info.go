@@ -1,8 +1,11 @@
 package http
 
 import (
+	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/httpinspect"
 	"aether/internal/utils"
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -26,6 +29,27 @@ var infoCmd = &cobra.Command{
 			fmt.Printf("error fetching result for %v: %v\n", target, result.Error)
 			return
 		}
+
+
+		if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(result)
+			if err != nil {
+				fmt.Printf("error marshalling scan result: %v\n", err)
+				return
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "http info",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Status: %v, Title: %v", result.Status, result.Title),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
+		}
+
+
 
 		if output == "json" {
 			if len(result.Body) > 1000 {

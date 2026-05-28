@@ -1,9 +1,12 @@
 package scan
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
+	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/scanner"
 	"aether/internal/utils"
 
@@ -85,6 +88,28 @@ var serviceCmd = &cobra.Command{
 				fmt.Printf("service: %v\nversion: %v\nos :%v\n\n", result.Service, result.Version, result.OS)
 			}
 		}
+
+			if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(serviceResults)
+			if err != nil {
+				fmt.Printf("error marshalling scan result: %v\n", err)
+				return
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "scan service",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Open ports: %v, Target: %v", len(serviceResults), target),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
+		}
+
+
+
+
 		if output == "json" {
 			err = utils.PrintJSON(serviceResults)
 			if err != nil {

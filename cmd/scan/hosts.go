@@ -1,11 +1,13 @@
 package scan
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
 	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/scanner"
 	"aether/internal/utils"
 
@@ -47,6 +49,27 @@ var hostsCmd = &cobra.Command{
 			}
 			results = append(results, res...)
 		}
+
+		if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(results)
+			if err != nil {
+				fmt.Printf("error marshalling scan result: %v\n", err)
+				return
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "scan hosts",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Hosts scanned: %v, Target: %v", len(results), target),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
+		}
+
+
+
 		if output == "json" {
 			err := utils.PrintJSON(results)
 			if err != nil {

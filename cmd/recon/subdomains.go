@@ -1,8 +1,11 @@
 package recon
 
 import (
+	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/recon"
 	"aether/internal/utils"
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -67,6 +70,25 @@ Use --threads to control concurrency (default 50).`,
 				hits = append(hits, r)
 			}
 		}
+
+		if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(hits)
+			if err != nil {
+				fmt.Printf("error marshalling scan result: %v\n", err)
+				return
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "recon subdomains",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Domain :%v, Subdomains found: %v", target, len(hits)),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
+		}
+
 
 		if output == "json" {
 			err := utils.PrintJSON(hits)

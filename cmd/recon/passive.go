@@ -1,8 +1,11 @@
 package recon
 
 import (
+	"aether/cmd/config"
+	"aether/internal/database"
 	"aether/internal/recon"
 	"aether/internal/utils"
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -23,6 +26,25 @@ var passiveCmd = &cobra.Command{
 			fmt.Printf("error: %v\n", err)
 			return
 		}
+
+		if config.ShouldSave() && config.DB != nil {
+			data, err := json.Marshal(result)
+			if err != nil {
+				fmt.Printf("error marshalling scan result: %v\n", err)
+				return
+			}
+			err = database.SaveScan(config.DB, database.ScanResult{
+				CommandType: "recon passive",
+				Target: target,
+				RawResult: string(data),
+				Summary: fmt.Sprintf("Domain :%v, Certificates: %v", result.Domain, result.TotalCerts),
+			})
+			if err != nil {
+				fmt.Printf("error saving scan result: %v\n", err)
+				return
+			}
+		}
+
 		
 		if output == "json" {
 			err := utils.PrintJSON(result)
