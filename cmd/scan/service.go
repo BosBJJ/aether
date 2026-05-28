@@ -89,7 +89,16 @@ var serviceCmd = &cobra.Command{
 			}
 		}
 
-			if config.ShouldSave() && config.DB != nil {
+		
+		if output == "json" {
+			err = utils.PrintJSON(serviceResults)
+			if err != nil {
+				fmt.Printf("error marshalling json: %v\n", err)
+				return
+			}
+		}
+		
+		if config.ShouldSave() && config.DB != nil {
 			data, err := json.Marshal(serviceResults)
 			if err != nil {
 				fmt.Printf("error marshalling scan result: %v\n", err)
@@ -103,17 +112,6 @@ var serviceCmd = &cobra.Command{
 			})
 			if err != nil {
 				fmt.Printf("error saving scan result: %v\n", err)
-				return
-			}
-		}
-
-
-
-
-		if output == "json" {
-			err = utils.PrintJSON(serviceResults)
-			if err != nil {
-				fmt.Printf("error marshalling json: %v\n", err)
 				return
 			}
 		}	

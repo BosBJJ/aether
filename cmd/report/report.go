@@ -11,6 +11,9 @@ var reportCmd = &cobra.Command{
 func Init() {
 	reportCmd.AddCommand(
 		listCmd,
+		viewCmd,
+		deleteCmd,
+		exportCmd,
 	)
 }
 

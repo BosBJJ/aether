@@ -94,3 +94,16 @@ func GetScan(db *sql.DB, id int) (ScanResult, error) {
 	
 	return result, nil
 }
+
+func DeleteScan(db *sql.DB, id int) error {
+	query := `DELETE FROM scans WHERE id = ?`
+
+	_, err := db.Exec(query, id)
+
+	if err != nil {
+		return fmt.Errorf("error deleting scan: %v", err)
+	}
+	
+
+	return nil
+}
