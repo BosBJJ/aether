@@ -1,5 +1,5 @@
 /*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
+Copyright © 2026 https://github.com/BosBJJ/aether
 */
 package main
 
@@ -8,10 +8,16 @@ import (
 	"aether/cmd/config"
 	"aether/internal/database"
 	"log"
+	"os"
 )
 
 func main() {
-	db, err := database.MakeDB("aether.db")
+	dbPath := os.Getenv("AETHER_DB_PATH")
+	if dbPath == "" {
+		dbPath = "aether.db"
+	}
+
+	db, err := database.MakeDB(dbPath)
 	if err != nil {
 		log.Fatalf("unable to create database: %v", err)
 	}

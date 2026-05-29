@@ -1,5 +1,5 @@
 /*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
+Copyright © 2026 https://github.com/BosBJJ/aether
 */
 package cmd
 
@@ -16,7 +16,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "aether",
 	Short: "A Go-based CLI toolkit for security auditing and network reconnaissance",
@@ -30,8 +29,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -40,9 +38,6 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 
 	// ====================== GLOBAL FLAGS ======================
 	rootCmd.PersistentFlags().StringVarP(&config.OutputFormat, "output", "o", "table", "Output format (table, json, html)")
@@ -52,10 +47,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&config.Quiet, "quiet", "q", false, "Quiet mode - show minimal output")
 	rootCmd.PersistentFlags().BoolVarP(&config.Verbose, "verbose", "v", false, "Verbose mode - show detailed output")
 	rootCmd.PersistentFlags().BoolVarP(&config.Pretty, "pretty", "p", false, "Pretty print JSON output")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	// ====================== LOCAL FLAGS ======================
-
+	
 	// ====================== REGISTER COMMANDS ======================
 
 	rootCmd.AddCommand(crypto.GetCryptoCmd())

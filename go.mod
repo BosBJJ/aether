@@ -7,8 +7,10 @@ require (
 	github.com/ccojocar/zxcvbn-go v1.0.4
 	github.com/likexian/whois v1.15.7
 	github.com/likexian/whois-parser v1.24.21
+	github.com/miekg/dns v1.1.72
 	github.com/spf13/cobra v1.10.2
 	golang.org/x/net v0.54.0
+	modernc.org/sqlite v1.50.1
 )
 
 require (
@@ -17,7 +19,6 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/likexian/gokit v0.25.16 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/miekg/dns v1.1.72 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
@@ -30,5 +31,4 @@ require (
 	modernc.org/libc v1.72.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
-	modernc.org/sqlite v1.50.1 // indirect
 )

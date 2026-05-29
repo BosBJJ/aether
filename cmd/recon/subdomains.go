@@ -7,12 +7,13 @@ import (
 	"aether/internal/utils"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
 
 var subCmd = &cobra.Command{
-	Use:   "substring",
+	Use:   "subdomain",
 	Aliases: []string{"subs", "sub"},
 	Short: "Enumerate subdomains using a DNS wordlist",
 	Long:  `Performs active subdomain enumeration by querying DNS for common subdomain prefixes.
@@ -29,18 +30,23 @@ Use --threads to control concurrency (default 50).`,
 
 		path := ""
 		numWords := ""
+		base := os.Getenv("AETHER_WORDLIST_PATH")
+		if base == "" {
+			base = "data/wordlists"
+		}
+		
 		switch size {
 		case "small":
-			path = "data/wordlists/subdomains-top1million-5000.txt"
+			path = base + "/subdomains-top1million-5000.txt"
 			numWords = "5000"
 		case "medium":
-			path = "data/wordlists/subdomains-top1million-110000.txt"
+			path = base + "/subdomains-top1million-110000.txt"
 			numWords = "110000"
 		case "large":
-			path = "data/wordlists/subdomains-top1million-full.txt"
+			path = base + "/subdomains-top1million-full.txt"
 			numWords = "1 million"
 		default:
-			path = "data/wordlists/subdomains-top1million-5000.txt"
+			path = base + "/subdomains-top1million-5000.txt"
 			numWords = "5000"
 		}
 

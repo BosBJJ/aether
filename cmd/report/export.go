@@ -6,6 +6,7 @@ import (
 	"aether/internal/utils"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -47,9 +48,20 @@ Examples:
 			return
 		}
 
+		ext := output
+		if ext == "table" {
+			ext = "md"
+		}
+		if filepath.Ext(dst) == "" {
+			dst = dst + "." + ext
+		}
+
+
+
 		err = os.WriteFile(dst, []byte(formatted), 0644)
 		if err != nil {
 			fmt.Printf("error creating file %v: %v", dst, err)
+			return
 		}
 
 		fmt.Printf("Exported report %v to %v\n", reportID, dst)
