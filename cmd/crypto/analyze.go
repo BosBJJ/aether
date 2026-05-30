@@ -3,8 +3,8 @@ package crypto
 import (
 	"fmt"
 
-	"aether/internal/crypto"
-	"aether/internal/utils"
+	"github.com/BosBJJ/aether/internal/crypto"
+	"github.com/BosBJJ/aether/internal/utils"
 
 	"github.com/spf13/cobra"
 )

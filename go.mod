@@ -1,4 +1,4 @@
-module aether
+module github.com/BosBJJ/aether
 
 go 1.25.0
 

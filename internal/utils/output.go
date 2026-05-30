@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"aether/cmd/config"
+	"github.com/BosBJJ/aether/cmd/config"
 	"encoding/json"
 	"fmt"
 )

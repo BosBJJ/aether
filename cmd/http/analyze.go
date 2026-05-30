@@ -1,10 +1,10 @@
 package http
 
 import (
-	"aether/cmd/config"
-	"aether/internal/database"
-	"aether/internal/httpinspect"
-	"aether/internal/utils"
+	"github.com/BosBJJ/aether/cmd/config"
+	"github.com/BosBJJ/aether/internal/database"
+	"github.com/BosBJJ/aether/internal/httpinspect"
+	"github.com/BosBJJ/aether/internal/utils"
 	"encoding/json"
 	"fmt"
 	"net/url"

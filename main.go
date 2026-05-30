@@ -4,9 +4,9 @@ Copyright © 2026 https://github.com/BosBJJ/aether
 package main
 
 import (
-	"aether/cmd"
-	"aether/cmd/config"
-	"aether/internal/database"
+	"github.com/BosBJJ/aether/cmd"
+	"github.com/BosBJJ/aether/cmd/config"
+	"github.com/BosBJJ/aether/internal/database"
 	"log"
 	"os"
 )

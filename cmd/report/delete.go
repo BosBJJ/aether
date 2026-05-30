@@ -1,8 +1,8 @@
 package report
 
 import (
-	"aether/cmd/config"
-	"aether/internal/database"
+	"github.com/BosBJJ/aether/cmd/config"
+	"github.com/BosBJJ/aether/internal/database"
 	"fmt"
 	"strconv"
 

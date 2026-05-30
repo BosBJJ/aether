@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"aether/cmd/config"
-	"aether/internal/database"
-	"aether/internal/scanner"
-	"aether/internal/utils"
+	"github.com/BosBJJ/aether/cmd/config"
+	"github.com/BosBJJ/aether/internal/database"
+	"github.com/BosBJJ/aether/internal/scanner"
+	"github.com/BosBJJ/aether/internal/utils"
 
 	"github.com/spf13/cobra"
 )

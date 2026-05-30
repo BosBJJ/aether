@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"aether/internal/crypto"
+	"github.com/BosBJJ/aether/internal/crypto"
 )
 
 

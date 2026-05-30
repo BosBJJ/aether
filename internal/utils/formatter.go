@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"aether/internal/database"
+	"github.com/BosBJJ/aether/internal/database"
 	"encoding/json"
 	"fmt"
 )

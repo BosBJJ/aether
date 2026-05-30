@@ -1,7 +1,7 @@
 package httpinspect
 
 import (
-	"aether/internal/utils"
+	"github.com/BosBJJ/aether/internal/utils"
 	"io"
 	"net/http"
 	"strings"

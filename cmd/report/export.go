@@ -1,9 +1,9 @@
 package report
 
 import (
-	"aether/cmd/config"
-	"aether/internal/database"
-	"aether/internal/utils"
+	"github.com/BosBJJ/aether/cmd/config"
+	"github.com/BosBJJ/aether/internal/database"
+	"github.com/BosBJJ/aether/internal/utils"
 	"fmt"
 	"os"
 	"path/filepath"

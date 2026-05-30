@@ -4,12 +4,12 @@ Copyright © 2026 https://github.com/BosBJJ/aether
 package cmd
 
 import (
-	"aether/cmd/config"
-	"aether/cmd/crypto"
-	"aether/cmd/http"
-	"aether/cmd/recon"
-	"aether/cmd/report"
-	"aether/cmd/scan"
+	"github.com/BosBJJ/aether/cmd/config"
+	"github.com/BosBJJ/aether/cmd/crypto"
+	"github.com/BosBJJ/aether/cmd/http"
+	"github.com/BosBJJ/aether/cmd/recon"
+	"github.com/BosBJJ/aether/cmd/report"
+	"github.com/BosBJJ/aether/cmd/scan"
 	"fmt"
 	"os"
 
