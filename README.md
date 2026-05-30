@@ -1,5 +1,6 @@
 # aether
 [![Go Reference](https://pkg.go.dev/badge/github.com/BosBJJ/aether.svg)](https://pkg.go.dev/github.com/BosBJJ/aether)
+
 Ethical hacking and security research tool for authorized environments only.
 
 
@@ -12,7 +13,17 @@ Ethical hacking and security research tool for authorized environments only.
 - The author is not responsible for any misuse or damage caused by this tool.
 - Users are fully responsible for complying with all applicable laws and regulations.
 
+## Motivation
+I realized I was interested in cryptography and wanted to make a tool that I could learn more about it with, 
+and then I started gaining interest in other aspects of cybersecurity and saw that while tools are easy to find
+you have to use a lot of different ones to get the "basics", so to learn more about different tools and uses I made my own toolkit
+
+
+
+
 ## Installation
+
+## Quick Start
 
 ### For Users
 Install the binary directly to your `GOBIN`:
@@ -26,6 +37,8 @@ git clone https://github.com/BosBJJ/aether.git
 cd aether
 go build -o aether .
 ```
+
+## Usage
 
 ## Global Flags
 
@@ -111,3 +124,10 @@ Add these to your `~/.bashrc` or `~/.zshrc` to persist across sessions, then run
 `export AETHER_DB_PATH=$HOME/aether/aether.db`
 
 `export AETHER_WORDLIST_PATH=$HOME/aether/data/wordlists`
+
+
+## Contributing
+
+### Submit a pull request
+
+If you'd like to contribute, please fork the repository and open a pull request to the `main` branch.
