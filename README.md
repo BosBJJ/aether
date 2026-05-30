@@ -103,6 +103,6 @@ Aether uses environment variables for paths when running outside the project dir
 
 Add these to your `~/.bashrc` or `~/.zshrc` to persist across sessions, then run `source ~/.bashrc` to reload.
 
-`export AETHER_DB_PATH=/home/user/github.com/BosBJJ/aether/aether.db`
+`export AETHER_DB_PATH=/home/user/aether/aether.db`
 
-`export AETHER_WORDLIST_PATH=/home/user/github.com/BosBJJ/aether/data/wordlists`
+`export AETHER_WORDLIST_PATH=/home/user/aether/data/wordlists`
