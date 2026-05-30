@@ -1,4 +1,5 @@
 # aether
+[![Go Reference](https://pkg.go.dev/badge/github.com/BosBJJ/aether.svg)](https://pkg.go.dev/github.com/BosBJJ/aether)
 Ethical hacking and security research tool for authorized environments only.
 
 
@@ -12,14 +13,18 @@ Ethical hacking and security research tool for authorized environments only.
 - Users are fully responsible for complying with all applicable laws and regulations.
 
 ## Installation
+
+### For Users
+Install the binary directly to your `GOBIN`:
+```bash
+go install github.com/BosBJJ/aether@latest
+```
+### For Developers (Build from source)
+
 ```bash
 git clone https://github.com/BosBJJ/aether.git
 cd aether
-# Build binary in current directory
 go build -o aether .
-
-# Or install system-wide (run from anywhere)
-go install .
 ```
 
 ## Global Flags
@@ -103,6 +108,6 @@ Aether uses environment variables for paths when running outside the project dir
 
 Add these to your `~/.bashrc` or `~/.zshrc` to persist across sessions, then run `source ~/.bashrc` to reload.
 
-`export AETHER_DB_PATH=/home/user/aether/aether.db`
+`export AETHER_DB_PATH=$HOME/aether/aether.db`
 
-`export AETHER_WORDLIST_PATH=/home/user/aether/data/wordlists`
+`export AETHER_WORDLIST_PATH=$HOME/aether/data/wordlists`
